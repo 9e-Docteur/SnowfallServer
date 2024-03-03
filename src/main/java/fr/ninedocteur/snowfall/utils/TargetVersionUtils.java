@@ -1,5 +1,8 @@
 package fr.ninedocteur.snowfall.utils;
 
+import be.ninedocteur.apare.ApareAPI;
+import be.ninedocteur.apare.utils.Logger;
+import be.ninedocteur.apare.utils.SharedConstants;
 import fr.ninedocteur.snowfall.api.TargetApareVersion;
 
 import java.io.File;
@@ -24,9 +27,14 @@ public class TargetVersionUtils {
                 for (Class<?> clazz : classes) {
                     if (clazz.isAnnotationPresent(TargetApareVersion.class)) {
                         TargetApareVersion targetApareVersion = clazz.getAnnotation(TargetApareVersion.class);
-                        //Integer parseVersion = Integer.valueOf(targetApareVersion.version().replace(".", ""));
-                        if (!targetApareVersion.version().equalsIgnoreCase("1.4")) {
-                            throw new RuntimeException("Snowfall is not compatible with this version of ApareAPI \nYou have version: " + "v" + " and Snowfall need: " + targetApareVersion.version());
+                        Integer parseVersion = Integer.valueOf(targetApareVersion.version().replace(".", ""));
+                        Integer parseCurrentVersion = Integer.valueOf(SharedConstants.VERSION.replace(".", ""));
+                        if(parseCurrentVersion >= parseVersion){
+                            if(!targetApareVersion.supportHigher()){
+                                ApareAPI.getLogger().send(clazz.getName() + " is supported since version " + parseVersion + " but because it support higher version, it may be broken on higher release. Caution!", Logger.Type.WARN);
+                            }
+                        } else {
+                            throw new RuntimeException("Snowfall is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and Snowfall need: " + targetApareVersion.version());
                         }
                     }
                 }

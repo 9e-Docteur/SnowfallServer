@@ -23,7 +23,7 @@ import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-@TargetApareVersion(version = "1.4")
+@TargetApareVersion(version = "1.4", supportHigher = true)
 public class Snowfall {
 
     private static PluginLoader pluginLoader;
@@ -47,6 +47,11 @@ public class Snowfall {
             }
         });
         console.start();
+    }
+
+    public static void stop(){
+        ApareAPI.getLogger().send("Shutting down...", Logger.Type.ERROR);
+        System.exit(1);
     }
 
     public static File getOrCreatePluginFolder() {
