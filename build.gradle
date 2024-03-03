@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+}
+
+group = 'region.username'
+version = '1.0'
+def jarName = "YourJarName"
+def modInstance = ""
+def modName = "YourModName"
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.github.9e-Docteur:ApareAPI:1.4.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.0-rc1'
+}
+
+jar {
+    manifest {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        attributes 'Main-Class' : 'fr.ninedocteur.snowfall.Snowfall'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it)}
+    }
+}
+
+
+def userDir = System.getProperty("user.home")
+def jarFile
+if (!modInstance.isEmpty()) {
+    jarFile = file(userDir + '/ApareAPI/Mods/' + modInstance + '/' + modName + '.jar')
+} else {
+    jarFile = file(userDir + '/ApareAPI/Mods/common/' + modName + '.jar')
+}
+
+task apareCompile(type: Jar) {
+    def destDir = jarFile.parentFile
+    if (!destDir.exists()) {
+        destDir.mkdirs()
+    }
+    from sourceSets.main.output
+    archiveFileName = jarFile.name
+    destinationDirectory = jarFile.parentFile
+}
+
+task apareRun(dependsOn: 'apareCompile', type: JavaExec) {
+    main = 'be.ninedocteur.apare.ApareAPI'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+test {
+    useJUnitPlatform()
+}
