@@ -35,6 +35,7 @@ public class Snowfall {
             TargetVersionUtils.start();
             String[] jvmArgs = {Arrays.toString(args), "--noMods"};
             pluginLoader = new PluginLoader();
+            pluginLoader.loadPlugins();
             server = new SnowfallServer(jvmArgs, 8888);
             server.startServer();
             CommandSystem.init();
@@ -49,7 +50,7 @@ public class Snowfall {
     }
 
     public static File getOrCreatePluginFolder() {
-        String jarPath = PluginManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String jarPath = Snowfall.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
         try {
             jarPath = java.net.URLDecoder.decode(jarPath, "UTF-8");

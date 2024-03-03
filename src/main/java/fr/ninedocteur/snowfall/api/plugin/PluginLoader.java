@@ -6,6 +6,7 @@ import be.ninedocteur.apare.api.mod.Mod;
 import be.ninedocteur.apare.utils.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.ninedocteur.snowfall.Snowfall;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +37,10 @@ public class PluginLoader {
         }
     }
 
-    public void loadplugins() {
+    public void loadPlugins() {
         if(!isLoaded){
             ApareAPI.getLogger().send("Looking for plugins...", Logger.Type.WARN);
-            File folder = new File(commonFolder);
+            File folder = new File(String.valueOf(Snowfall.getOrCreatePluginFolder()));
             if (!folder.exists()) {
                 folder.mkdirs();
             }
