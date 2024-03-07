@@ -1,10 +1,12 @@
 package fr.ninedocteur.snowfall.utils;
 
 import be.ninedocteur.apare.ApareAPI;
-import be.ninedocteur.apare.utils.Logger;
-import be.ninedocteur.apare.utils.SharedConstants;
-import fr.ninedocteur.snowfall.api.TargetApareVersion;
 
+import be.ninedocteur.apare.utils.SharedConstants;
+import be.ninedocteur.apare.utils.logger.Logger;
+import fr.ninedocteur.snowfall.Snowfall;
+import fr.ninedocteur.snowfall.api.TargetApareVersion;
+import fr.ninedocteur.snowfall.api.TargetSnowfallVersion;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,8 +21,6 @@ public class TargetVersionUtils {
     private static boolean isStarted;
     public static void start() {
             List<String> packages = getPackages();
-
-
             for (String packageName : packages) {
                 List<Class<?>> classes = getClasses(packageName);
 
@@ -29,12 +29,40 @@ public class TargetVersionUtils {
                         TargetApareVersion targetApareVersion = clazz.getAnnotation(TargetApareVersion.class);
                         Integer parseVersion = Integer.valueOf(targetApareVersion.version().replace(".", ""));
                         Integer parseCurrentVersion = Integer.valueOf(SharedConstants.VERSION.replace(".", ""));
-                        if(parseCurrentVersion >= parseVersion){
-                            if(!targetApareVersion.supportHigher()){
-                                ApareAPI.getLogger().send(clazz.getName() + " is supported since version " + parseVersion + " but because it support higher version, it may be broken on higher release. Caution!", Logger.Type.WARN);
+                        if(parseCurrentVersion > parseVersion){
+                            if(targetApareVersion.supportHigher()){
+                                Snowfall.getLogger().send(clazz.getName() + " is supported since version " + parseVersion + " but because it support higher version, it may be broken on newer release. Caution!", Logger.Type.WARN);
+                            } else {
+                                throw new RuntimeException(clazz.getName() + " is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and " + clazz.getName() + " need: " + targetApareVersion.version());
+                            }
+                        } else if (parseCurrentVersion < parseVersion) {
+                            if(targetApareVersion.supportLower()){
+                                Snowfall.getLogger().send(clazz.getName() + " is supported since version " + parseVersion + " but because it support lower version, it may be broken on older release. Caution!", Logger.Type.WARN);
+                            } else {
+                                throw new RuntimeException(clazz.getName() + " is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and " + clazz.getName() + " need: " + targetApareVersion.version());
                             }
                         } else {
-                            throw new RuntimeException("Snowfall is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and Snowfall need: " + targetApareVersion.version());
+                            throw new RuntimeException(clazz.getName() + " is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and " + clazz.getName() + " need: " + targetApareVersion.version());
+                        }
+                    }
+                    if (clazz.isAnnotationPresent(TargetSnowfallVersion.class)) {
+                        TargetSnowfallVersion targetSnowfallVersion = clazz.getAnnotation(TargetSnowfallVersion.class);
+                        Integer parseVersion = Integer.valueOf(targetSnowfallVersion.snowfallRequiredVersion().replace(".", ""));
+                        Integer parseCurrentVersion = Integer.valueOf(targetSnowfallVersion.yourContentVersion().replace(".", ""));
+                        if(parseCurrentVersion > parseVersion){
+                            if(targetSnowfallVersion.supportHigher()){
+                                Snowfall.getLogger().send(clazz.getName() + " is supported since version " + parseVersion + " but because it support higher version, it may be broken on newer release. Caution!", Logger.Type.WARN);
+                            } else {
+                                throw new RuntimeException(clazz.getName() + " is not compatible with this version of SnowfallServer \nYou have version: " + targetSnowfallVersion.yourContentVersion() + " and " + clazz.getName() + " need: " + targetSnowfallVersion.snowfallRequiredVersion());
+                            }
+                        } else if (parseCurrentVersion < parseVersion) {
+                            if(targetSnowfallVersion.supportLower()){
+                                Snowfall.getLogger().send(clazz.getName() + " is supported since version " + parseVersion + " but because it support lower version, it may be broken on older release. Caution!", Logger.Type.WARN);
+                            } else {
+                                throw new RuntimeException(clazz.getName() + " is not compatible with this version of SnowfallServer \nYou have version: " + targetSnowfallVersion.yourContentVersion() + " and " + clazz.getName() + " need: " + targetSnowfallVersion.snowfallRequiredVersion());
+                            }
+                        } else {
+                            throw new RuntimeException(clazz.getName() + " is not compatible with this version of SnowfallServer \nYou have version: " + targetSnowfallVersion.yourContentVersion() + " and " + clazz.getName() + " need: " + targetSnowfallVersion.snowfallRequiredVersion());
                         }
                     }
                 }
@@ -76,7 +104,6 @@ public class TargetVersionUtils {
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 if (resource.getProtocol().equals("file")) {
-                    // Si le chemin est un fichier, c'est probablement un dossier dans le système de fichiers
                     File directory = new File(resource.toURI());
                     if (directory.isDirectory()) {
                         String[] files = directory.list();

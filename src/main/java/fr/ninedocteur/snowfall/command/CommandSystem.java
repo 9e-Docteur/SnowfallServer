@@ -1,8 +1,13 @@
 package fr.ninedocteur.snowfall.command;
 
 import be.ninedocteur.apare.ApareAPI;
-import be.ninedocteur.apare.utils.Logger;
+import be.ninedocteur.apare.utils.logger.Logger;
+import fr.ninedocteur.snowfall.Snowfall;
+import fr.ninedocteur.snowfall.command.command.FetchClientCommand;
+import fr.ninedocteur.snowfall.command.command.GetIPCommand;
+import fr.ninedocteur.snowfall.command.command.HardCheckCommand;
 import fr.ninedocteur.snowfall.command.command.StopCommand;
+import fr.ninedocteur.snowfall.event.CommandExecutedEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +20,9 @@ public class CommandSystem {
     public static void init(){
         if(!isInited){
             registerCommand(new StopCommand());
+            registerCommand(new FetchClientCommand());
+            registerCommand(new HardCheckCommand());
+            registerCommand(new GetIPCommand());
         }
     }
 
@@ -23,15 +31,17 @@ public class CommandSystem {
         String cmdName = formattedCmd[0];
         boolean found = false;
         for (Command command : REGISTERED_COMMANDS) {
-            if (cmdName.equalsIgnoreCase(command.getCommandName())) {
+            if (cmdName.equalsIgnoreCase(command.getPrefix())) {
                 found = true;
                 String[] withoutCmdName = Arrays.stream(formattedCmd).filter(val -> !val.equals(cmdName)).toArray(String[]::new);
                 command.execute(withoutCmdName);
+                CommandExecutedEvent event = new CommandExecutedEvent(input);
+                ApareAPI.getEventFactory().fireEvent(event);
                 break;
             }
         }
         if (!found) {
-            ApareAPI.getLogger().send("Command not found", Logger.Type.ERROR);
+            Snowfall.getLogger().send("Command not found", Logger.Type.ERROR);
         }
     }
 

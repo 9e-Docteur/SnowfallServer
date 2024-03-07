@@ -3,7 +3,8 @@ package fr.ninedocteur.snowfall.api.plugin;
 import be.ninedocteur.apare.ApareAPI;
 import be.ninedocteur.apare.api.mod.ApareMod;
 import be.ninedocteur.apare.api.mod.Mod;
-import be.ninedocteur.apare.utils.Logger;
+
+import be.ninedocteur.apare.utils.logger.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.ninedocteur.snowfall.Snowfall;
@@ -28,7 +29,7 @@ public class PluginLoader {
 
     public PluginLoader(){
         if(!isLoaded){
-            ApareAPI.getLogger().send("Starting mod loader...", Logger.Type.WARN);
+            Snowfall.getLogger().send("Starting mod loader...", Logger.Type.WARN);
             REQUIRED_FIELD.add("mod_name");
             REQUIRED_FIELD.add("mod_version");
             REQUIRED_FIELD.add("authors");
@@ -39,7 +40,7 @@ public class PluginLoader {
 
     public void loadPlugins() {
         if(!isLoaded){
-            ApareAPI.getLogger().send("Looking for plugins...", Logger.Type.WARN);
+            Snowfall.getLogger().send("Looking for plugins...", Logger.Type.WARN);
             File folder = new File(String.valueOf(Snowfall.getOrCreatePluginFolder()));
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -77,7 +78,7 @@ public class PluginLoader {
                                     Plugin modAnnonation = clazz.getAnnotation(Plugin.class);
                                     if (instance instanceof SnowfallPlugin) {
                                         ((SnowfallPlugin) instance).init();
-                                        ApareAPI.getLogger().send("Finded plugin: " + ((SnowfallPlugin) instance).getPluginName(), Logger.Type.WARN);
+                                        Snowfall.getLogger().send("Finded plugin: " + ((SnowfallPlugin) instance).getPluginName(), Logger.Type.WARN);
                                     }
                                 }
                             } catch (ClassNotFoundException e) {
