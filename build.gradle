@@ -23,7 +23,6 @@ dependencies {
 }
 
 jar {
-    archiveBaseName = "SnowfallServer-" + version
     manifest {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         attributes 'Main-Class' : 'fr.ninedocteur.snowfall.Snowfall'
