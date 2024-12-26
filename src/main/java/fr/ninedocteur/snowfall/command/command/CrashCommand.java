@@ -3,20 +3,21 @@ package fr.ninedocteur.snowfall.command.command;
 
 import fr.ninedocteur.snowfall.Snowfall;
 import fr.ninedocteur.snowfall.command.Command;
+import fr.ninedocteur.snowfall.exception.CrashException;
 
-public class StopCommand extends Command {
+public class CrashCommand extends Command {
 
-    public StopCommand() {
-        super("Stop the server");
+    public CrashCommand(){
+        super("Crash the server");
     }
 
     @Override
     public String getPrefix() {
-        return "stop";
+        return "crash";
     }
 
     @Override
     public void execute(String[] args) {
-        Snowfall.stop();
+        throw new CrashException("You executed /crash lol");
     }
 }

@@ -8,6 +8,11 @@ import fr.ninedocteur.snowfall.Snowfall;
 import fr.ninedocteur.snowfall.command.Command;
 
 public class GetIPCommand extends Command {
+
+    public GetIPCommand() {
+        super("Get the server IP");
+    }
+
     @Override
     public String getPrefix() {
         return "getip";

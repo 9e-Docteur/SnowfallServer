@@ -11,6 +11,9 @@ import java.util.Properties;
 public class SnowfallConfig {
     private File file;
 
+    public static int SERVER_PORT, MAX_CLIENTS;
+    public static boolean ALLOW_OUTSIDE_REQUEST;
+
     private Properties properties;
     private HashMap<String, String> CONFIGS = new HashMap<>(); //CONFIG; DEFAULT VALUE
 
@@ -65,10 +68,17 @@ public class SnowfallConfig {
         try
         {
             properties.load(new FileInputStream(file));
+            loadVariables();
         }
         catch (Throwable t)
         {
             throw new RuntimeException("Can't load the properties", t);
         }
+    }
+
+    public void loadVariables(){
+        this.SERVER_PORT = Integer.parseInt(properties.getProperty("server-port"));
+        this.MAX_CLIENTS = Integer.parseInt(properties.getProperty("max-clients"));
+        this.ALLOW_OUTSIDE_REQUEST = Boolean.parseBoolean(properties.getProperty("allow-outside-request"));
     }
 }

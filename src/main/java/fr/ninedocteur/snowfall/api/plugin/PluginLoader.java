@@ -78,6 +78,7 @@ public class PluginLoader {
                                     Plugin modAnnonation = clazz.getAnnotation(Plugin.class);
                                     if (instance instanceof SnowfallPlugin) {
                                         ((SnowfallPlugin) instance).init();
+                                        Snowfall.getLoadedPlugins().add((SnowfallPlugin) instance);
                                         Snowfall.getLogger().send("Finded plugin: " + ((SnowfallPlugin) instance).getPluginName(), Logger.Type.WARN);
                                     }
                                 }

@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SnowfallServer.main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SnowfallServer_main_jar</output-path>
+    <root id="archive" name="SnowfallServer.main.jar">
+      <element id="module-output" name="SnowfallServer.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.17.0-rc1/8502f78141a0335f44cd755abf81ec1b7f9d9799/jackson-annotations-2.17.0-rc1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.17.0-rc1/905f272c2e32091ea6ac3f8741f627b6880977bf/jackson-databind-2.17.0-rc1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.17.0-rc1/8568e3f05f34552fae0ae59d680babefcf086834/jackson-core-2.17.0-rc1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.9e-Docteur/ApareAPI/1.4.1/323f6aec77d95a6a67511ce34f559cc4ea6a0773/ApareAPI-1.4.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.9/b69e7fff6c473d3ed2b489cdfd673a091fd94226/byte-buddy-1.14.9.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -3,10 +3,7 @@ package fr.ninedocteur.snowfall.command;
 import be.ninedocteur.apare.ApareAPI;
 import be.ninedocteur.apare.utils.logger.Logger;
 import fr.ninedocteur.snowfall.Snowfall;
-import fr.ninedocteur.snowfall.command.command.FetchClientCommand;
-import fr.ninedocteur.snowfall.command.command.GetIPCommand;
-import fr.ninedocteur.snowfall.command.command.HardCheckCommand;
-import fr.ninedocteur.snowfall.command.command.StopCommand;
+import fr.ninedocteur.snowfall.command.command.*;
 import fr.ninedocteur.snowfall.event.CommandExecutedEvent;
 
 import java.util.ArrayList;
@@ -23,6 +20,9 @@ public class CommandSystem {
             registerCommand(new FetchClientCommand());
             registerCommand(new HardCheckCommand());
             registerCommand(new GetIPCommand());
+            registerCommand(new CrashCommand());
+            registerCommand(new HelpCommand());
+            registerCommand(new UptimeCommand());
         }
     }
 
@@ -47,5 +47,9 @@ public class CommandSystem {
 
     public static void registerCommand(Command command){
         REGISTERED_COMMANDS.add(command);
+    }
+
+    public List<Command> getRegisteredCommands() {
+        return REGISTERED_COMMANDS;
     }
 }

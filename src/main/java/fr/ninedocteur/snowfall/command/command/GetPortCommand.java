@@ -8,6 +8,11 @@ import fr.ninedocteur.snowfall.Snowfall;
 import fr.ninedocteur.snowfall.command.Command;
 
 public class GetPortCommand extends Command {
+
+    public GetPortCommand() {
+        super("Get the server port");
+    }
+
     @Override
     public String getPrefix() {
         return "getport";

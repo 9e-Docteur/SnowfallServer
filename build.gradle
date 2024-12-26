@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'eclipse'
+    id 'idea'
 }
 
-group = 'region.username'
-version = '1.0'
+group = 'be.ninedocteur'
+version = '0.5-Alpha'
 def jarName = "YourJarName"
 def modInstance = ""
 def modName = "YourModName"
@@ -21,6 +23,7 @@ dependencies {
 }
 
 jar {
+    archiveBaseName = "SnowfallServer-" + version
     manifest {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         attributes 'Main-Class' : 'fr.ninedocteur.snowfall.Snowfall'
@@ -28,6 +31,64 @@ jar {
 
     from {
         configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it)}
+    }
+}
+
+task generateRunConfigurationsForEclipse {
+    doLast {
+        file(".settings/org.eclipse.jdt.launching.prefs").text = """
+        org.eclipse.jdt.launching.PROGRAM_ARGUMENTS=--runInDevMode
+        org.eclipse.jdt.launching.MAIN_TYPE=fr.ninedocteur.snowfall.Snowfall
+        """
+    }
+}
+
+task generateRunConfigurationForIdea {
+    doLast {
+        def ideaConfigFile = file(".idea/runConfigurations/Snowfall.xml")
+        ideaConfigFile.parentFile.mkdirs()
+        ideaConfigFile.text = """
+        <component name="ProjectRunConfigurationManager">
+          <configuration default="false" name="Snowfall" type="Application" factoryName="Application">
+            <option name="MAIN_CLASS_NAME" value="fr.ninedocteur.snowfall.SnowfallServer" />
+            <option name="PROGRAM_PARAMETERS" value="--runInDevMode" />
+            <option name="VM_PARAMETERS" value="-Xmx512m -XX:+UseG1GC -XX:+UseStringDeduplication -Dfile.encoding=UTF-8" />
+            <option name="WORKING_DIRECTORY" value="file://\$PROJECT_DIR\$" />
+            <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+            <option name="ALTERNATIVE_JRE_PATH" value="\$PROJECT_DIR\$\\jdk1.8" />
+            <option name="ENABLE_SWING_INSPECTOR" value="false" />
+            <option name="ENV_VARIABLES" />
+            <option name="PASS_PARENT_ENVS" value="true" />
+            <module name="snowfall" />
+            <envs />
+            <method />
+          </configuration>
+        </component>
+        """
+    }
+}
+
+compileJava.dependsOn generateRunConfigurationForIdea
+
+eclipse {
+    classpath {
+        file {
+            withXml {
+                def node = it.asNode()
+                def entries = node.component.find { it.@name == 'org.eclipse.jdt.launching.classpathEntry' }
+                entries.appendNode('classpathentry', [kind: 'con', path: 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5', including: '/project/org.eclipse.jdt.launching.prefs'])
+            }
+        }
+    }
+}
+
+tasks.eclipse.dependsOn generateRunConfigurationsForEclipse
+
+task configureSystemProperties {
+    doFirst {
+        if (!System.properties.containsKey("ide")) {
+            System.setProperty("ide", "IntelliJ IDEA")
+        }
     }
 }
 

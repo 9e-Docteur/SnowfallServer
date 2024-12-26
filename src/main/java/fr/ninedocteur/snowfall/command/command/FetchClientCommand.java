@@ -9,6 +9,10 @@ import fr.ninedocteur.snowfall.command.ICommandExecutor;
 
 public class FetchClientCommand extends Command {
 
+    public FetchClientCommand() {
+        super("To know how many clients are connected to the server");
+    }
+
     @Override
     public String getPrefix() {
         return "fetch-client";

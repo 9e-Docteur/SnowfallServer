@@ -41,7 +41,7 @@ public class TargetVersionUtils {
                             } else {
                                 throw new RuntimeException(clazz.getName() + " is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and " + clazz.getName() + " need: " + targetApareVersion.version());
                             }
-                        } else {
+                        } else if(parseCurrentVersion == parseVersion) {
                             throw new RuntimeException(clazz.getName() + " is not compatible with this version of ApareAPI \nYou have version: " + SharedConstants.VERSION + " and " + clazz.getName() + " need: " + targetApareVersion.version());
                         }
                     }

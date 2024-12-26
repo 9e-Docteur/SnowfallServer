@@ -9,6 +9,11 @@ import fr.ninedocteur.snowfall.Snowfall;
 import fr.ninedocteur.snowfall.command.Command;
 
 public class HardCheckCommand extends Command {
+
+    public HardCheckCommand() {
+        super("Check the hardware");
+    }
+
     @Override
     public String getPrefix() {
         return "hardcheck";
