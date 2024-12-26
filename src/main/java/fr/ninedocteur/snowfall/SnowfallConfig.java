@@ -77,8 +77,10 @@ public class SnowfallConfig {
     }
 
     public void loadVariables(){
-        this.SERVER_PORT = Integer.parseInt(properties.getProperty("server-port"));
-        this.MAX_CLIENTS = Integer.parseInt(properties.getProperty("max-clients"));
-        this.ALLOW_OUTSIDE_REQUEST = Boolean.parseBoolean(properties.getProperty("allow-outside-request"));
+        if(properties.containsKey("server-port")){
+            this.SERVER_PORT = Integer.parseInt(properties.getProperty("server-port"));
+            this.MAX_CLIENTS = Integer.parseInt(properties.getProperty("max-clients"));
+            this.ALLOW_OUTSIDE_REQUEST = Boolean.parseBoolean(properties.getProperty("allow-outside-request"));
+        }
     }
 }
